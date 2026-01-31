@@ -1,89 +1,179 @@
-# Conversion dictionary
-convert = {
-    "20": 7.9, "21": 8.3, "22": 8.7, "23": 9.1, "24": 9.4, "25": 9.8, "26": 10.2,
-    "27": 10.6, "28": 11.0, "29": 11.4, "30": 11.8, "31": 12.2, "32": 12.6, "33": 13.0,
-    "34": 13.4, "35": 13.8, "36": 14.2, "37": 14.6, "38": 15.0, "39": 15.4, "40": 15.7,
-    "41": 16.1, "42": 16.5, "43": 16.9, "44": 17.3, "45": 17.7, "46": 18.1, "47": 18.5,
-    "48": 18.9, "49": 19.3, "50": 19.7, "51": 20.1, "52": 20.5, "53": 20.9, "54": 21.3,
-    "55": 21.7, "56": 22.0, "57": 22.4, "58": 22.8, "59": 23.2, "60": 23.6, "61": 24.0,
-    "62": 24.4, "63": 24.8, "64": 25.2, "65": 25.6, "66": 26.0, "67": 26.4, "68": 26.8,
-    "69": 27.2, "70": 27.6, "71": 28.0, "72": 28.3, "73": 28.7, "74": 29.1, "75": 29.5,
-    "76": 29.9, "77": 30.3, "78": 30.7, "79": 31.1, "80": 31.5, "81": 31.9, "82": 32.3,
-    "83": 32.7, "84": 33.1, "85": 33.5, "86": 33.9, "87": 34.3, "88": 34.6, "89": 35.0,
-    "90": 35.4, "91": 35.8, "92": 36.2, "93": 36.6, "94": 37.0, "95": 37.4, "96": 37.8,
-    "97": 38.2, "98": 38.6, "99": 39.0, "100": 39.4, "101": 39.8, "102": 40.2, "103": 40.6,
-    "104": 40.9, "105": 41.3, "106": 41.7, "107": 42.1, "108": 42.5, "109": 42.9, "110": 43.3,
-    "111": 43.7, "112": 44.1, "113": 44.5, "114": 44.9, "115": 45.3, "116": 45.7, "117": 46.1,
-    "118": 46.5, "119": 46.9, "120": 47.2, "121": 47.6, "122": 48.0, "123": 48.4, "124": 48.8,
-    "125": 49.2, "126": 49.6, "127": 50.0, "128": 50.4, "129": 50.8, "130": 51.2, "131": 51.6,
-    "132": 52.0, "133": 52.4, "134": 52.8, "135": 53.1, "136": 53.5, "137": 53.9, "138": 54.3,
-    "139": 54.7, "140": 55.1, "141": 55.5, "142": 55.9, "143": 56.3, "144": 56.7, "145": 57.1,
-    "146": 57.5, "147": 57.9, "148": 58.3, "149": 58.7, "150": 59.1, "151": 59.4, "152": 59.8
+import tkinter as tk
+from decimal import Decimal
+
+# ---------- Data ----------
+convert_table = {
+    str(i): v for i, v in zip(
+        range(20, 153),
+        [
+            7.9,8.3,8.7,9.1,9.4,9.8,10.2,10.6,11.0,11.4,11.8,12.2,12.6,13.0,13.4,
+            13.8,14.2,14.6,15.0,15.4,15.7,16.1,16.5,16.9,17.3,17.7,18.1,18.5,
+            18.9,19.3,19.7,20.1,20.5,20.9,21.3,21.7,22.0,22.4,22.8,23.2,23.6,
+            24.0,24.4,24.8,25.2,25.6,26.0,26.4,26.8,27.2,27.6,28.0,28.3,28.7,
+            29.1,29.5,29.9,30.3,30.7,31.1,31.5,31.9,32.3,32.7,33.1,33.5,33.9,
+            34.3,34.6,35.0,35.4,35.8,36.2,36.6,37.0,37.4,37.8,38.2,38.6,39.0,
+            39.4,39.8,40.2,40.6,40.9,41.3,41.7,42.1,42.5,42.9,43.3,43.7,44.1,
+            44.5,44.9,45.3,45.7,46.1,46.5,46.9,47.2,47.6,48.0,48.4,48.8,49.2,
+            49.6,50.0,50.4,50.8,51.2,51.6,52.0,52.4,52.8,53.1,53.5,53.9,54.3,
+            54.7,55.1,55.5,55.9,56.3,56.7,57.1,57.5,57.9,58.3,58.7,59.1,59.4,
+            59.8
+        ]
+    )
 }
-# Conversion dictionary (unchanged)...
 
-def round_float(number):
-    """Round to nearest 0.5"""
-    return round(number * 2) / 2
+# ---------- Logic ----------
+def round_float(n):
+    d = Decimal(str(n))
+    i = int(d)
+    dp = d - i
+    if Decimal("0.1") <= dp <= Decimal("0.3"):
+        return str(i)
+    elif Decimal("0.4") <= dp <= Decimal("0.7"):
+        return str(i + Decimal("0.5"))
+    elif Decimal("0.8") <= dp:
+        return str(i + 1)
+    return str(i)
 
-def convert_value(value):
-    """
-    Converts a single value, a range (e.g. 100-120), or a dash ("-").
-    Returns float, tuple, or "-" as needed.
-    """
-    value = value.strip()
-    if value == "-":
-        return "-"
-    if '-' in value and not value.startswith('-') and not value.endswith('-'):
-        parts = value.split('-')
-        if len(parts) != 2:
-            raise ValueError(f"Invalid range format: {value}")
-        low_key = ''.join(filter(str.isdigit, parts[0]))
-        high_key = ''.join(filter(str.isdigit, parts[1]))
-        if low_key not in convert or high_key not in convert:
-            raise KeyError(f"One of {low_key} or {high_key} not in conversion dictionary.")
-        low_val = round_float(convert[low_key])
-        high_val = round_float(convert[high_key])
-        return (low_val, high_val)
-    else:
-        key = ''.join(filter(str.isdigit, value))
-        if key not in convert:
-            raise KeyError(f"{key} not in conversion dictionary.")
-        return round_float(convert[key])
-
-def format_value(val):
-    """Formats float, tuple, or '-' for output"""
-    if val == "-":
-        return "-"
-    if isinstance(val, tuple):
-        return f"{val[0]}-{val[1]}"
-    return f"{val}"
-
-def process_input(input_string):
-    components = input_string.strip().split()
-
-    if len(components) != 3:
-        raise ValueError("Input must contain exactly 3 values (including '-' if missing).")
-
-    chest_raw, shoulder_raw, length_raw = components
-
-    chest = convert_value(chest_raw)
-    shoulder = convert_value(shoulder_raw)
-    length = convert_value(length_raw)
-
-    return f"อก {format_value(chest)} ไหล่ {format_value(shoulder)} ยาว {format_value(length)}"
-
-# Main loop
-while True:
+def convert_value(v):
     try:
-        s = input("Enter Chinese size (or 'exit' to quit): ")
-        if s.lower() == 'exit':
-            break
-        result = process_input(s)
-        print("\n" + result + "\n")
-    except ValueError as e:
-        print(f"Error: {e}")
-    except KeyError as e:
-        print(f"Error: Key {e} not found in conversion dictionary.")
-    except Exception as e:
-        print(f"Unexpected error: {e}")
+        key = str(int(float(v)))
+        return round_float(convert_table[key]) if key in convert_table else None
+    except:
+        return None
+
+def convert_part(p):
+    if "-" in p:
+        a, b = p.split("-")
+        r1, r2 = convert_value(a), convert_value(b)
+        return f"{r1}-{r2}" if r1 and r2 else None
+    return convert_value(p)
+
+# ---------- UI Helpers ----------
+def copy_text(t):
+    root.clipboard_clear()
+    root.clipboard_append(t)
+
+def clear_all():
+    text_input.delete("1.0", tk.END)
+    code_entry.delete(0, tk.END)
+    price_entry.delete(0, tk.END)
+    for w in result_frame.winfo_children():
+        w.destroy()
+
+# ---------- Main Process ----------
+def process():
+    for w in result_frame.winfo_children():
+        w.destroy()
+
+    code = code_entry.get().strip()
+    price = price_entry.get().strip()
+
+    lines = text_input.get("1.0", tk.END).strip().split("\n")
+    result_lines = []
+
+    for line in lines:
+        parts = line.replace(" - ", "-").split()
+        text_size = ""
+        nums = []
+
+        for p in parts:
+            if any(c.isdigit() for c in p):
+                nums.append(p)
+            else:
+                text_size = p
+
+        if len(nums) < 2:
+            continue
+
+        chest = convert_part(nums[0])
+        length = convert_part(nums[-1])
+        if not chest or not length:
+            continue
+
+        line_parts = [f"อก {chest}"]
+
+        if len(nums) == 3:
+            shoulder = convert_part(nums[1])
+            if shoulder:
+                line_parts.append(f"ไหล่ {shoulder}")
+
+        line_parts.append(f"ยาว {length}")
+
+        result_lines.append(
+            (f"{text_size} " if text_size else "") + " ".join(line_parts)
+        )
+
+    if not result_lines:
+        return
+
+    size_block = "\n".join(result_lines)
+
+    # Block 1
+    b1 = tk.Frame(result_frame, bd=1, relief="solid", padx=8, pady=8)
+    b1.pack(fill="x", pady=6)
+
+    tk.Label(b1, text=size_block, justify="left", anchor="w", wraplength=420)\
+        .pack(side="left", fill="x", expand=True)
+
+    tk.Button(b1, text="Copy", command=lambda: copy_text(size_block))\
+        .pack(side="right")
+
+    # Block 2
+    if code and price:
+        sell_block = f"{code} : {price}.-\n{size_block}"
+
+        b2 = tk.Frame(result_frame, bd=1, relief="solid", padx=8, pady=8)
+        b2.pack(fill="x", pady=(0, 6))
+
+        tk.Label(b2, text=sell_block, justify="left", anchor="w", wraplength=420)\
+            .pack(side="left", fill="x", expand=True)
+
+        tk.Button(b2, text="Copy", command=lambda: copy_text(sell_block))\
+            .pack(side="right")
+
+# ---------- UI ----------
+root = tk.Tk()
+root.title("Chinese Size Tool")
+root.geometry("520x600")
+
+main = tk.Frame(root, padx=15, pady=15)
+main.pack(fill="both", expand=True)
+
+tk.Label(main, text="รหัสเสื้อ").pack(anchor="w")
+code_entry = tk.Entry(main)
+code_entry.pack(fill="x")
+
+tk.Label(main, text="ราคา").pack(anchor="w", pady=(5, 0))
+price_entry = tk.Entry(main)
+price_entry.pack(fill="x")
+
+tk.Label(main, text="ใส่ไซส์ (ตัวเลขล้วน / รองรับช่วง)",
+         font=("Helvetica", 10, "bold")).pack(anchor="w", pady=(10, 0))
+
+text_input = tk.Text(main, height=6)
+text_input.pack(fill="x", pady=6)
+
+btns = tk.Frame(main)
+btns.pack(pady=5)
+
+tk.Button(btns, text="แปลง", width=12, command=process).pack(side="left", padx=5)
+tk.Button(btns, text="ล้าง", width=12, command=clear_all).pack(side="left", padx=5)
+
+result_box = tk.LabelFrame(main, text="ผลลัพธ์", padx=8, pady=8)
+result_box.pack(fill="both", expand=True, pady=10)
+
+canvas = tk.Canvas(result_box)
+scroll = tk.Scrollbar(result_box, orient="vertical", command=canvas.yview)
+result_frame = tk.Frame(canvas)
+
+result_frame.bind("<Configure>",
+    lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+)
+
+canvas.create_window((0, 0), window=result_frame, anchor="nw")
+canvas.configure(yscrollcommand=scroll.set)
+
+canvas.pack(side="left", fill="both", expand=True)
+scroll.pack(side="right", fill="y")
+
+root.mainloop()
