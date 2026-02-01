@@ -106,30 +106,53 @@ def process():
     if not result_lines:
         return
 
+    # ----- Block 1 (เพิ่ม code + price ต่อท้าย) -----
     size_block = "\n".join(result_lines)
 
-    # Block 1
+    if code:
+        size_block += f"\n{code}"
+    if price:
+        size_block += f"\n{price}.-"
+
     b1 = tk.Frame(result_frame, bd=1, relief="solid", padx=8, pady=8)
     b1.pack(fill="x", pady=6)
 
-    tk.Label(b1, text=size_block, justify="left", anchor="w", wraplength=420)\
-        .pack(side="left", fill="x", expand=True)
+    tk.Label(
+        b1,
+        text=size_block,
+        justify="left",
+        anchor="w",
+        wraplength=420
+    ).pack(side="left", fill="x", expand=True)
 
-    tk.Button(b1, text="Copy", command=lambda: copy_text(size_block))\
-        .pack(side="right")
+    tk.Button(
+        b1,
+        text="Copy",
+        command=lambda: copy_text(size_block)
+    ).pack(side="right")
 
-    # Block 2
+    # ----- Block 2 (เหมือนเดิม ไม่เปลี่ยน) -----
     if code and price:
-        sell_block = f"{code} : {price}.-\n{size_block}"
+        size_text = "\n".join(result_lines)
+        sell_block = f"{code} : {price}.-\n{size_text}"
 
         b2 = tk.Frame(result_frame, bd=1, relief="solid", padx=8, pady=8)
         b2.pack(fill="x", pady=(0, 6))
 
-        tk.Label(b2, text=sell_block, justify="left", anchor="w", wraplength=420)\
-            .pack(side="left", fill="x", expand=True)
+        tk.Label(
+            b2,
+            text=sell_block,
+            justify="left",
+            anchor="w",
+            wraplength=420
+        ).pack(side="left", fill="x", expand=True)
 
-        tk.Button(b2, text="Copy", command=lambda: copy_text(sell_block))\
-            .pack(side="right")
+        tk.Button(
+            b2,
+            text="Copy",
+            command=lambda: copy_text(sell_block)
+        ).pack(side="right")
+
 
 # ---------- UI ----------
 root = tk.Tk()
